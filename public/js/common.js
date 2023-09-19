@@ -342,9 +342,10 @@ var dateRangeSettings = {
     },
 };
 var dateRangeSettingForProfitLossReport = {
-    opens: 'left',
+    // opens: 'left',
     startDate: financial_year.start,
     endDate: financial_year.end,
+    // format: moment_date_format
     // minYear: ,
     // maxYear: 
 }

@@ -319,7 +319,13 @@
               <td><b>(+)</b></td>
               <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $sell->shipping_charges }}</span></td>
             </tr>
-
+            @if($sell->sale_return_amount>0)
+            <tr>
+              <th>Sale Return: @if($sell->shipping_details)({{$sell->shipping_details}}) @endif</th>
+              <td><b>(-)</b></td>
+              <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $sell->sale_return_amount }}</span></td>
+            </tr>
+            @endif
             @if( !empty( $sell->additional_expense_value_1 )  && !empty( $sell->additional_expense_key_1 ))
               <tr>
                 <th>{{ $sell->additional_expense_key_1 }}:</th>

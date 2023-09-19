@@ -305,6 +305,7 @@ class SellPosController extends Controller
      */
     public function store(Request $request)
     {
+        //   dd($request);
         if (! auth()->user()->can('sell.create') && ! auth()->user()->can('direct_sell.access') && ! auth()->user()->can('so.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -421,6 +422,11 @@ class SellPosController extends Controller
 
                 if (! empty($request->input('invoice_scheme_id'))) {
                     $input['invoice_scheme_id'] = $request->input('invoice_scheme_id');
+                }
+                // dd($request->input('sale_return_amount')>0);
+                if($request->input('sale_return_amount')>0){
+                    $input['sale_return_amount'] = $request->input('sale_return_amount');
+                    //   dd($input);
                 }
 
                 //Types of service
@@ -1091,6 +1097,7 @@ class SellPosController extends Controller
      */
     public function update(Request $request, $id)
     {
+       //   dd($request);
         if (! auth()->user()->can('sell.update') && ! auth()->user()->can('direct_sell.access') &&
         ! auth()->user()->can('so.update') && ! auth()->user()->can('edit_pos_payment')) {
             abort(403, 'Unauthorized action.');
@@ -1251,6 +1258,11 @@ class SellPosController extends Controller
                     $input['additional_expense_key_4'] = $request->input('additional_expense_key_4');
                     $input['additional_expense_value_4'] = $request->input('additional_expense_value_4');
                 }
+                // if($request->input('sale_return_amount')>0){
+                    // $input['sale_return_amount'] = $request->input('sale_return_amount');
+                    //    dd($input['sale_return_amount']);
+                // }
+
                 $only_payment = ! $is_direct_sale && ! auth()->user()->can('sell.update') && auth()->user()->can('edit_pos_payment');
 
                 //if edit pos not allowed and only edit payment allowed
@@ -1269,7 +1281,8 @@ class SellPosController extends Controller
 
                     return $output;
                 }
-
+                $input['sale_return_amount'] = $request->input('sale_return_amount');
+                // dd($input['sale_return_amount']);
                 //Begin transaction
                 DB::beginTransaction();
 

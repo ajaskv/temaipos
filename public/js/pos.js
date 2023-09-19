@@ -1,4 +1,13 @@
 $(document).ready(function() {
+
+    if(!isEditPage){
+        $( "#sale-return-check-box" ).prop( "checked", false );
+        $("#option-section").hide();
+        console.log('calling val 0');
+        $("#sale-return-total").val(0);
+        $("#sale-return-amount-section").hide();
+    }
+      
     customer_set = false;
     //Prevent enter key function except texarea
     $('form').on('keyup keypress', function(e) {
@@ -644,6 +653,7 @@ $(document).ready(function() {
 
         //Check for remaining balance & add it in 1st payment row
         var total_payable = __read_number($('input#final_total_input'));
+
         var total_paying = __read_number($('input#total_paying_input'));
         if (total_payable > total_paying) {
             var bal_due = total_payable - total_paying;
@@ -766,7 +776,7 @@ $(document).ready(function() {
             // var total_payble = __read_number($('input#final_total_input'));
             // var total_paying = __read_number($('input#total_paying_input'));
             var cnf = true;
-
+           
             //Ignore if the difference is less than 0.5
             if ($('input#in_balance_due').val() >= 0.5) {
                 cnf = confirm(LANG.paid_amount_is_less_than_payable);
@@ -1050,6 +1060,11 @@ $(document).ready(function() {
         //Check if product is present or not.
         if ($('table#pos_table tbody').find('.product_row').length <= 0) {
             toastr.warning(LANG.no_products_added);
+            return false;
+        }
+        var cart_value = __read_number($('input#final_total_input'));
+        if(cart_value<0){
+            toastr.warning("Total amount should be equal or greater than zero!");
             return false;
         }
 
@@ -1709,6 +1724,7 @@ function pos_total_row() {
 
     //$('span.unit_price_total').html(unit_price_total);
     $('span.price_total').html(__currency_trans_from_en(price_total, false));
+    console.log('calling');
     calculate_billing_details(price_total);
 }
 
@@ -1775,7 +1791,11 @@ function calculate_billing_details(price_total) {
 
     var rounding_multiple = $('#amount_rounding_method').val() ? parseFloat($('#amount_rounding_method').val()) : 0;
     var round_off_data = __round(total_payable, rounding_multiple);
-    var total_payable_rounded = round_off_data.number;
+   
+    var sale_return = $("#sale-return-total").val();
+    console.log('sale_return  '+sale_return);
+    var total_payable_rounded = (round_off_data.number)-sale_return;
+    console.log(total_payable_rounded);
 
     var round_off_amount = round_off_data.diff;
     if (round_off_amount != 0) {
@@ -2981,4 +3001,100 @@ $(document).on('hidden.bs.modal', '.view_modal', function(){
         clearInterval(service_staff_availability_interval);
     }
     service_staff_availability_interval = null;
+});
+
+function resetSaleReturn(){
+    console.log('reset');
+    $("#option-section").css("display", "none");
+    $("#sale-return-amount-section").css("display", "none");
+    $("#sale-return-invoice").html('');
+    $("#sale-return-total").val(0);
+    pos_total_row();
+}
+
+$('#sale-return-check-box').on('click',function(){
+    if($(this).prop("checked") == true){
+        var cart_value = __read_number($('input#final_total_input'));
+        console.log(cart_value+" cart");
+        if(cart_value>0){
+            $("#option-section").css("display", "block");
+            getAllSaleReturns();
+        }else{
+             toastr.error("Please select products");
+            $( "#sale-return-check-box" ).prop( "checked", false );
+        }
+
+    }
+    else if($(this).prop("checked") == false){
+        resetSaleReturn();       
+    }
+});
+
+function getAllSaleReturns(){
+    $('#sale-return-invoice').select2({
+        placeholder: "Select the sale return invoice",
+        ajax: {
+            url: '/sell-return/get/all',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page,
+                };
+            },
+            processResults: function(data) {
+                return {
+                    results: data,
+                };
+            },
+        },
+        minimumInputLength: 1,
+        escapeMarkup: function(m) {
+            return m;
+        },
+        templateResult: function(data) {
+            if (!data.id) {
+                return data.text;
+            }
+            var html = data.invoice_no;
+            return html;
+        },
+        language: {
+            noResults: function() {
+                // var name = $('#supplier_id')
+                // 	.data('select2')
+                // 	.dropdown.$search.val();
+                // return (
+                // 	'<button type="button" data-name="' +
+                // 	name +
+                // 	'" class="btn btn-link add_new_supplier"><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>&nbsp; ' +
+                // 	__translate('add_name_as_new_supplier', { name: name }) +
+                // 	'</button>'
+                // );
+            },
+},
+}).on('select2:select', function (e) {
+    var cart_value = __read_number($('input#final_total_input'));
+    if(cart_value>0){
+        console.log(e.params.data);
+        var selected_data = e.params.data
+        var option = "<option selected>"+selected_data.invoice_no+"</option>"
+        $("#sale-return-invoice").html(option);
+        var sale_return = selected_data.sale_return_total*selected_data.exchange_rate;
+        $("#sale-return-amount").html(sale_return)
+        $("#sale-return-amount-section").css("display", "block");
+        $("#sale-return-total").val(sale_return);
+        pos_total_row();
+    }else{
+        $("#sale-return-check-box" ).prop( "checked", false );
+        resetSaleReturn();
+    }
+});
+}
+$("#remove-sale-return").on("click",function(){
+    console.log('sale return removed');
+   $("#sale-return-amount-edit-section").css("display", "none");
+   $("#sale-return-total").val(0);
+   pos_total_row();
 });

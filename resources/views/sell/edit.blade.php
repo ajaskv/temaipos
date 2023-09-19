@@ -392,6 +392,23 @@
 							</td>
 						</tr>
 					</table>
+					@if($transaction->sale_return_amount>0)
+					<div id="sale-return-amount-edit-section">
+					<table class="table table-condensed table-bordered table-striped">
+						<tr>
+							<td>
+								<div class="pull-right">
+								
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<b>Sale Return Amount:</b>(-) 
+									<span class="price_total1" id="sale-return-amount">{{number_format($transaction->sale_return_amount,2)}}</span>
+									<input hidden name="sale_return_amount" value="{{$transaction->sale_return_amount}}"  id="sale-return-total">
+									&nbsp;&nbsp;&nbsp;<i class="fa fa-times text-danger  cursor-pointer" aria-hidden="true" id="remove-sale-return"></i>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>@endif
 					</div>
 				</div>
 			@endcomponent
@@ -858,6 +875,10 @@
 @stop
 
 @section('javascript')
+    <script>
+	  var isEditPage = true;
+	  console.log("  te "+$("#sale-return-total").val());
+	</script>
 	<script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
 	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
 	<script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>

@@ -433,6 +433,34 @@
 							</td>
 						</tr>
 					</table>
+					<div class="form-group">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value=""  id="sale-return-check-box">
+							<label class="form-check-label" for="flexCheckDefault">
+							  Sale Return
+							</label>
+						  </div>
+			<div id="option-section">			  
+<select class="form-control " aria-label="Small select example" id="sale-return-invoice" >
+	
+  </select>
+</div>
+					</div>
+					<div id="sale-return-amount-section">
+					<table class="table table-condensed table-bordered table-striped">
+						<tr>
+							<td>
+								<div class="pull-right">
+								
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<b>Sale Return Amount: </b>
+									<span class="price_total1" id="sale-return-amount"></span>
+									<input hidden name="sale_return_amount" id="sale-return-total">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
 					</div>
 				</div>
 			@endcomponent
@@ -909,6 +937,9 @@
 @stop
 
 @section('javascript')
+<script>
+	var isEditPage = false;
+  </script>
 	<script src="{{ asset('js/pos.js?v=' . $asset_v) }}"></script>
 	<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
 	<script src="{{ asset('js/opening_stock.js?v=' . $asset_v) }}"></script>
@@ -918,7 +949,10 @@
     	<script src="{{ asset('js/restaurant.js?v=' . $asset_v) }}"></script>
     @endif
     <script type="text/javascript">
+
     	$(document).ready( function() {
+	
+
     		$('#status').change(function(){
     			if ($(this).val() == 'final') {
     				$('#payment_rows_div').removeClass('hide');

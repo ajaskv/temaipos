@@ -45,7 +45,7 @@ class TransactionUtil extends Util
         $invoice_no = ! empty($input['invoice_no']) ? $input['invoice_no'] : $this->getInvoiceNumber($business_id, $input['status'], $input['location_id'], $invoice_scheme_id, $sale_type);
 
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
-
+        $sale_return_amount = !empty($input['sale_return_amount'])? $input['sale_return_amount']:0;
         $pay_term_number = isset($input['pay_term_number']) ? $input['pay_term_number'] : null;
         $pay_term_type = isset($input['pay_term_type']) ? $input['pay_term_type'] : null;
 
@@ -55,6 +55,7 @@ class TransactionUtil extends Util
             $pay_term_number = $contact->pay_term_number;
             $pay_term_type = $contact->pay_term_type;
         }
+        // dd($input);
         $transaction = Transaction::create([
             'business_id' => $business_id,
             'location_id' => $input['location_id'],
@@ -73,6 +74,7 @@ class TransactionUtil extends Util
             'discount_amount' => $uf_data ? $this->num_uf($input['discount_amount']) : $input['discount_amount'],
             'tax_amount' => $invoice_total['tax'],
             'final_total' => $final_total,
+            'sale_return_amount'=>$sale_return_amount,
             'additional_notes' => ! empty($input['sale_note']) ? $input['sale_note'] : null,
             'staff_note' => ! empty($input['staff_note']) ? $input['staff_note'] : null,
             'created_by' => $user_id,
@@ -173,7 +175,8 @@ class TransactionUtil extends Util
             $invoice_no = $this->getInvoiceNumber($business_id, $input['status'], $transaction->location_id, $invoice_scheme_id);
         }
         $final_total = $uf_data ? $this->num_uf($input['final_total']) : $input['final_total'];
-
+        // $sale_return_amount = !empty($input['sale_return_amount'])? $input['sale_return_amount']:0;
+        // dd($sale_return_amount);
         $pay_term_number = isset($input['pay_term_number']) ? $input['pay_term_number'] : null;
         $pay_term_type = isset($input['pay_term_type']) ? $input['pay_term_type'] : null;
 
@@ -221,6 +224,7 @@ class TransactionUtil extends Util
                                 $uf_data ? $this->num_uf($input['exchange_rate']) : $input['exchange_rate'] : 1,
             'selling_price_group_id' => isset($input['selling_price_group_id']) ? $input['selling_price_group_id'] : null,
             'pay_term_number' => $pay_term_number,
+            'sale_return_amount'=>$input['sale_return_amount'],
             'pay_term_type' => $pay_term_type,
             'is_suspend' => ! empty($input['is_suspend']) ? 1 : 0,
             'is_recurring' => ! empty($input['is_recurring']) ? $input['is_recurring'] : 0,

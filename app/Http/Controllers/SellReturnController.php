@@ -591,4 +591,14 @@ class SellReturnController extends Controller
             'redirect_url' => action([\App\Http\Controllers\SellReturnController::class, 'add'], [$sell->id]),
         ];
     }
+    public function getSalesReturnInvoice(){
+      $term = request()->q;
+      $invoices =  Transaction::select('id','invoice_no','final_total as sale_return_total','exchange_rate')
+        ->where('type',"sell_return")
+        ->where('is_sale_return_completed',false)
+        ->where("invoice_no",'like', '%'.$term.'%')
+        ->orderBy('id','desc')
+        ->get();
+        return response()->json($invoices);
+    }
 }

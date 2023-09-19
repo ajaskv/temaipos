@@ -721,6 +721,9 @@ $(document).ready(function() {
     });
 
     //Profit / Loss
+    $('#profit_loss_date_filter span').html(
+        financial_year.start.format(moment_date_format) + ' ~ ' + financial_year.end.format(moment_date_format)
+    );
     if ($('#profit_loss_date_filter').length == 1) {
         $('#profit_loss_date_filter').daterangepicker(dateRangeSettingForProfitLossReport, function(start, end) {
             $('#profit_loss_date_filter span').html(
@@ -729,9 +732,10 @@ $(document).ready(function() {
             updateProfitLoss();
         });
         $('#profit_loss_date_filter').on('cancel.daterangepicker', function(ev, picker) {
-            $('#profit_loss_date_filter').html(
-                '<i class="fa fa-calendar"></i> ' + LANG.filter_by_date
-            );
+            console.log(144)
+            // $('#profit_loss_date_filter').html(
+            //     '<i class="fa fa-calendar"></i> ' + LANG.filter_by_date
+            // );
         });
         updateProfitLoss();
     }

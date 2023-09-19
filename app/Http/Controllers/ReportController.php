@@ -94,9 +94,29 @@ class ReportController extends Controller
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
             $location_id = $request->get('location_id');
-
+            $sell_details = $this->transactionUtil->getSellTotals(
+                $business_id,
+                $start_date,
+                $end_date,
+                $location_id
+            );
+            // dd($sell_details);
             $data = $this->transactionUtil->getProfitLossDetails($business_id, $location_id, $start_date, $end_date);
+            $data['sales']= $sell_details;
+            $transaction_types = [
+                 'sell_return',
+            ];
 
+            $transaction_totals = $this->transactionUtil->getTransactionTotals(
+                $business_id,
+                $transaction_types,
+                $start_date,
+                $end_date,
+                $location_id
+            );
+            $total_sell_return_inc_tax = $transaction_totals['total_sell_return_inc_tax'];
+            $data['sales']['total_sell_return'] = $total_sell_return_inc_tax;
+            // dd($data['sales']['total_sell_exc_tax']);
             // $data['closing_stock'] = $data['closing_stock'] - $data['total_sell_return'];
 
             return view('report.partials.profit_loss_details', compact('data'))->render();
