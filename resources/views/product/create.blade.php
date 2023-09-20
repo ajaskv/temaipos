@@ -163,7 +163,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-4">
+    {{-- <div class="col-sm-4">
         <div class="form-group">
             {!! Form::label('product_brochure', __('lang_v1.product_brochure') . ':') !!}
             {!! Form::file('product_brochure', ['id' => 'product_brochure', 'accept' => implode(',', array_keys(config('constants.document_upload_mimes_types')))]); !!}
@@ -174,7 +174,7 @@
                 </p>
             </small>
         </div>
-    </div>
+    </div> --}}
     @endcomponent
 
     @component('components.widget', ['class' => 'box-primary'])
@@ -204,14 +204,14 @@
         </div>
         @endif
 
-        <div class="col-sm-4">
+        {{-- <div class="col-sm-4">
             <div class="form-group">
                 <br>
                 <label>
                     {!! Form::checkbox('enable_sr_no', 1, !(empty($duplicate_product)) ? $duplicate_product->enable_sr_no : false, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
                 </label> @show_tooltip(__('lang_v1.tooltip_sr_no'))
             </div>
-        </div>
+        </div> --}}
 
         <div class="col-sm-4">
             <div class="form-group">
