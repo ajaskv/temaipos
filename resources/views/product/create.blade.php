@@ -176,7 +176,7 @@
         </div>
     </div> --}}
     @endcomponent
-
+{{-- 
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row">
         @if(session('business.enable_product_expiry'))
@@ -202,7 +202,7 @@
                 </div>
             </div>
         </div>
-        @endif
+        @endif --}}
 
         {{-- <div class="col-sm-4">
             <div class="form-group">
@@ -222,7 +222,7 @@
             </div>
         </div> --}}
 
-        <div class="clearfix"></div>
+        {{-- <div class="clearfix"></div>
 
         <!-- Rack, Row & position number -->
         @if(session('business.enable_racks') || session('business.enable_row') || session('business.enable_position'))
@@ -302,7 +302,7 @@
         <div class="clearfix"></div>
         @include('layouts.partials.module_form_part')
     </div>
-    @endcomponent
+    @endcomponent --}}
 
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row">

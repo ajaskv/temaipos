@@ -179,148 +179,151 @@
             </div> --}}
     @endcomponent
 
-    @component('components.widget', ['class' => 'box-primary'])
-        <div class="row">
-        @if(session('business.enable_product_expiry'))
+   
+    {{-- @component('components.widget', ['class' => 'box-primary'])
+    <div class="row">
+    @if(session('business.enable_product_expiry'))
 
-          @if(session('business.expiry_type') == 'add_expiry')
+      @if(session('business.expiry_type') == 'add_expiry')
+        @php
+          $expiry_period = 12;
+          $hide = true;
+        @endphp
+      @else
+        @php
+          $expiry_period = null;
+          $hide = false;
+        @endphp
+      @endif
+      <div class="col-sm-4 @if($hide) hide @endif">
+        <div class="form-group">
+          <div class="multi-input">
             @php
-              $expiry_period = 12;
-              $hide = true;
+              $disabled = false;
+              $disabled_period = false;
+              if( empty($product->expiry_period_type) || empty($product->enable_stock) ){
+                $disabled = true;
+              }
+              if( empty($product->enable_stock) ){
+                $disabled_period = true;
+              }
             @endphp
-          @else
-            @php
-              $expiry_period = null;
-              $hide = false;
-            @endphp
-          @endif
-          <div class="col-sm-4 @if($hide) hide @endif">
-            <div class="form-group">
-              <div class="multi-input">
-                @php
-                  $disabled = false;
-                  $disabled_period = false;
-                  if( empty($product->expiry_period_type) || empty($product->enable_stock) ){
-                    $disabled = true;
-                  }
-                  if( empty($product->enable_stock) ){
-                    $disabled_period = true;
-                  }
-                @endphp
-                  {!! Form::label('expiry_period', __('product.expires_in') . ':') !!}<br>
-                  {!! Form::text('expiry_period', @num_format($product->expiry_period), ['class' => 'form-control pull-left input_number',
-                    'placeholder' => __('product.expiry_period'), 'style' => 'width:60%;', 'disabled' => $disabled]); !!}
-                  {!! Form::select('expiry_period_type', ['months'=>__('product.months'), 'days'=>__('product.days'), '' =>__('product.not_applicable') ], $product->expiry_period_type, ['class' => 'form-control select2 pull-left', 'style' => 'width:40%;', 'id' => 'expiry_period_type', 'disabled' => $disabled_period]); !!}
-              </div>
-            </div>
-          </div>
-          @endif
-          {{-- <div class="col-sm-4">
-            <div class="checkbox">
-              <label>
-                {!! Form::checkbox('enable_sr_no', 1, $product->enable_sr_no, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
-              </label>
-              @show_tooltip(__('lang_v1.tooltip_sr_no'))
-            </div>
-          </div> --}}
-
-          {{-- <div class="col-sm-4">
-          <div class="form-group">
-            <br>
-            <label>
-              {!! Form::checkbox('not_for_selling', 1, $product->not_for_selling, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.not_for_selling')</strong>
-            </label> @show_tooltip(__('lang_v1.tooltip_not_for_selling'))
-          </div>
-        </div> --}}
-
-        <div class="clearfix"></div>
-
-        <!-- Rack, Row & position number -->
-        @if(session('business.enable_racks') || session('business.enable_row') || session('business.enable_position'))
-          <div class="col-md-12">
-            <h4>@lang('lang_v1.rack_details'):
-              @show_tooltip(__('lang_v1.tooltip_rack_details'))
-            </h4>
-          </div>
-          @foreach($business_locations as $id => $location)
-            <div class="col-sm-3">
-              <div class="form-group">
-                {!! Form::label('rack_' . $id,  $location . ':') !!}
-
-                
-                  @if(!empty($rack_details[$id]))
-                    @if(session('business.enable_racks'))
-                      {!! Form::text('product_racks_update[' . $id . '][rack]', $rack_details[$id]['rack'], ['class' => 'form-control', 'id' => 'rack_' . $id]); !!}
-                    @endif
-
-                    @if(session('business.enable_row'))
-                      {!! Form::text('product_racks_update[' . $id . '][row]', $rack_details[$id]['row'], ['class' => 'form-control']); !!}
-                    @endif
-
-                    @if(session('business.enable_position'))
-                      {!! Form::text('product_racks_update[' . $id . '][position]', $rack_details[$id]['position'], ['class' => 'form-control']); !!}
-                    @endif
-                  @else
-                    {!! Form::text('product_racks[' . $id . '][rack]', null, ['class' => 'form-control', 'id' => 'rack_' . $id, 'placeholder' => __('lang_v1.rack')]); !!}
-
-                    {!! Form::text('product_racks[' . $id . '][row]', null, ['class' => 'form-control', 'placeholder' => __('lang_v1.row')]); !!}
-
-                    {!! Form::text('product_racks[' . $id . '][position]', null, ['class' => 'form-control', 'placeholder' => __('lang_v1.position')]); !!}
-                  @endif
-
-              </div>
-            </div>
-          @endforeach
-        @endif
-
-
-        <div class="col-sm-4">
-          <div class="form-group">
-            {!! Form::label('weight',  __('lang_v1.weight') . ':') !!}
-            {!! Form::text('weight', $product->weight, ['class' => 'form-control', 'placeholder' => __('lang_v1.weight')]); !!}
+              {!! Form::label('expiry_period', __('product.expires_in') . ':') !!}<br>
+              {!! Form::text('expiry_period', @num_format($product->expiry_period), ['class' => 'form-control pull-left input_number',
+                'placeholder' => __('product.expiry_period'), 'style' => 'width:60%;', 'disabled' => $disabled]); !!}
+              {!! Form::select('expiry_period_type', ['months'=>__('product.months'), 'days'=>__('product.days'), '' =>__('product.not_applicable') ], $product->expiry_period_type, ['class' => 'form-control select2 pull-left', 'style' => 'width:40%;', 'id' => 'expiry_period_type', 'disabled' => $disabled_period]); !!}
           </div>
         </div>
-        <div class="clearfix"></div>
-        
-        @php
-            $custom_labels = json_decode(session('business.custom_labels'), true);
-            $product_custom_fields = !empty($custom_labels['product']) ? $custom_labels['product'] : [];
-            $product_cf_details = !empty($custom_labels['product_cf_details']) ? $custom_labels['product_cf_details'] : [];
-        @endphp
-        <!--custom fields-->
+      </div>
+      @endif --}}
+      {{-- <div class="col-sm-4">
+        <div class="checkbox">
+          <label>
+            {!! Form::checkbox('enable_sr_no', 1, $product->enable_sr_no, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
+          </label>
+          @show_tooltip(__('lang_v1.tooltip_sr_no'))
+        </div>
+      </div> --}}
 
-        @foreach($product_custom_fields as $index => $cf)
-            @if(!empty($cf))
-                @php
-                    $db_field_name = 'product_custom_field' . $loop->iteration;
-                    $cf_type = !empty($product_cf_details[$loop->iteration]['type']) ? $product_cf_details[$loop->iteration]['type'] : 'text';
-                    $dropdown = !empty($product_cf_details[$loop->iteration]['dropdown_options']) ? explode(PHP_EOL, $product_cf_details[$loop->iteration]['dropdown_options']) : [];
-                @endphp
+      {{-- <div class="col-sm-4">
+      <div class="form-group">
+        <br>
+        <label>
+          {!! Form::checkbox('not_for_selling', 1, $product->not_for_selling, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.not_for_selling')</strong>
+        </label> @show_tooltip(__('lang_v1.tooltip_not_for_selling'))
+      </div>
+    </div> --}}
 
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        {!! Form::label($db_field_name, $cf . ':') !!}
-                        @if(in_array($cf_type, ['text', 'date']))
-                            <input type="{{$cf_type}}" name="{{$db_field_name}}" id="{{$db_field_name}}" 
-                            value="{{$product->$db_field_name}}" class="form-control" placeholder="{{$cf}}">
-                        @elseif($cf_type == 'dropdown')
-                            {!! Form::select($db_field_name, $dropdown, $product->$db_field_name, ['placeholder' => $cf, 'class' => 'form-control select2']); !!}
-                        @endif
-                    </div>
-                </div>
-            @endif
-        @endforeach
+    {{-- <div class="clearfix"></div>
 
+    <!-- Rack, Row & position number -->
+    @if(session('business.enable_racks') || session('business.enable_row') || session('business.enable_position'))
+      <div class="col-md-12">
+        <h4>@lang('lang_v1.rack_details'):
+          @show_tooltip(__('lang_v1.tooltip_rack_details'))
+        </h4>
+      </div>
+      @foreach($business_locations as $id => $location)
         <div class="col-sm-3">
           <div class="form-group">
-            {!! Form::label('preparation_time_in_minutes',  __('lang_v1.preparation_time_in_minutes') . ':') !!}
-            {!! Form::number('preparation_time_in_minutes', $product->preparation_time_in_minutes, ['class' => 'form-control', 'placeholder' => __('lang_v1.preparation_time_in_minutes')]); !!}
+            {!! Form::label('rack_' . $id,  $location . ':') !!}
+
+            
+              @if(!empty($rack_details[$id]))
+                @if(session('business.enable_racks'))
+                  {!! Form::text('product_racks_update[' . $id . '][rack]', $rack_details[$id]['rack'], ['class' => 'form-control', 'id' => 'rack_' . $id]); !!}
+                @endif
+
+                @if(session('business.enable_row'))
+                  {!! Form::text('product_racks_update[' . $id . '][row]', $rack_details[$id]['row'], ['class' => 'form-control']); !!}
+                @endif
+
+                @if(session('business.enable_position'))
+                  {!! Form::text('product_racks_update[' . $id . '][position]', $rack_details[$id]['position'], ['class' => 'form-control']); !!}
+                @endif
+              @else
+                {!! Form::text('product_racks[' . $id . '][rack]', null, ['class' => 'form-control', 'id' => 'rack_' . $id, 'placeholder' => __('lang_v1.rack')]); !!}
+
+                {!! Form::text('product_racks[' . $id . '][row]', null, ['class' => 'form-control', 'placeholder' => __('lang_v1.row')]); !!}
+
+                {!! Form::text('product_racks[' . $id . '][position]', null, ['class' => 'form-control', 'placeholder' => __('lang_v1.position')]); !!}
+              @endif
+
           </div>
         </div>
-        <!--custom fields-->
-        @include('layouts.partials.module_form_part')
-        </div>
-    @endcomponent
+      @endforeach
+    @endif
+
+
+    <div class="col-sm-4">
+      <div class="form-group">
+        {!! Form::label('weight',  __('lang_v1.weight') . ':') !!}
+        {!! Form::text('weight', $product->weight, ['class' => 'form-control', 'placeholder' => __('lang_v1.weight')]); !!}
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    
+    @php
+        $custom_labels = json_decode(session('business.custom_labels'), true);
+        $product_custom_fields = !empty($custom_labels['product']) ? $custom_labels['product'] : [];
+        $product_cf_details = !empty($custom_labels['product_cf_details']) ? $custom_labels['product_cf_details'] : [];
+    @endphp
+    <!--custom fields-->
+
+    @foreach($product_custom_fields as $index => $cf)
+        @if(!empty($cf))
+            @php
+                $db_field_name = 'product_custom_field' . $loop->iteration;
+                $cf_type = !empty($product_cf_details[$loop->iteration]['type']) ? $product_cf_details[$loop->iteration]['type'] : 'text';
+                $dropdown = !empty($product_cf_details[$loop->iteration]['dropdown_options']) ? explode(PHP_EOL, $product_cf_details[$loop->iteration]['dropdown_options']) : [];
+            @endphp
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    {!! Form::label($db_field_name, $cf . ':') !!}
+                    @if(in_array($cf_type, ['text', 'date']))
+                        <input type="{{$cf_type}}" name="{{$db_field_name}}" id="{{$db_field_name}}" 
+                        value="{{$product->$db_field_name}}" class="form-control" placeholder="{{$cf}}">
+                    @elseif($cf_type == 'dropdown')
+                        {!! Form::select($db_field_name, $dropdown, $product->$db_field_name, ['placeholder' => $cf, 'class' => 'form-control select2']); !!}
+                    @endif
+                </div>
+            </div>
+        @endif
+    @endforeach
+
+    <div class="col-sm-3">
+      <div class="form-group">
+        {!! Form::label('preparation_time_in_minutes',  __('lang_v1.preparation_time_in_minutes') . ':') !!}
+        {!! Form::number('preparation_time_in_minutes', $product->preparation_time_in_minutes, ['class' => 'form-control', 'placeholder' => __('lang_v1.preparation_time_in_minutes')]); !!}
+      </div>
+    </div>
+    <!--custom fields-->
+    @include('layouts.partials.module_form_part')
+    </div>
+@endcomponent --}}
+
+
 
     @component('components.widget', ['class' => 'box-primary'])
         <div class="row">
