@@ -224,14 +224,14 @@
             </div>
           </div> --}}
 
-          <div class="col-sm-4">
+          {{-- <div class="col-sm-4">
           <div class="form-group">
             <br>
             <label>
               {!! Form::checkbox('not_for_selling', 1, $product->not_for_selling, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.not_for_selling')</strong>
             </label> @show_tooltip(__('lang_v1.tooltip_not_for_selling'))
           </div>
-        </div>
+        </div> --}}
 
         <div class="clearfix"></div>
 

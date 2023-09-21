@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
-    if(!isEditPage){
+    
+    if(typeof isEditPage != 'undefined' && !isEditPage){
         $( "#sale-return-check-box" ).prop( "checked", false );
         $("#option-section").hide();
         console.log('calling val 0');
@@ -1793,8 +1794,13 @@ function calculate_billing_details(price_total) {
     var round_off_data = __round(total_payable, rounding_multiple);
    
     var sale_return = $("#sale-return-total").val();
-    console.log('sale_return  '+sale_return);
-    var total_payable_rounded = (round_off_data.number)-sale_return;
+    // console.log('sale_return  '+sale_return);
+    if (typeof sale_return != 'undefined' && sale_return  != null){
+        // console.log('sale return is')
+        var total_payable_rounded = (round_off_data.number)-sale_return;
+    }else{
+        var total_payable_rounded = (round_off_data.number);
+    }
     console.log(total_payable_rounded);
 
     var round_off_amount = round_off_data.diff;
