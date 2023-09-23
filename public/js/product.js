@@ -31,6 +31,35 @@ $(document).ready(function() {
         }
     });
 
+    function calculateStock(){
+        var total = 0;
+        locations.forEach((item,index)=>{ 
+            var price = __read_number($("input#stock-unit-price-"+item));
+            var quantity = __read_number($("input#stock-quantity-"+item));
+            var sub_total = price*quantity;
+            total +=sub_total;
+            __write_number($("input#stock-unit-subtotal-"+item), sub_total);
+          });
+          __write_number($("input#total-stock-amount"), total);
+    }
+
+    function setStockPrice(product_price){
+        // console.log(product_price);
+        locations.forEach((item,index)=>{ 
+        //    $("#stock-unit-price-"+item).html(product_price);
+           __write_number($("input#stock-unit-price-"+item), product_price);
+        });
+        calculateStock();
+        
+    }
+   
+    if(typeof locations !== 'undefined'){
+        locations.forEach((item,index)=>{ 
+            $(document).on('change', 'input#stock-quantity-'+item, function(e) {
+                calculateStock();
+            });
+        });
+    }
     //Start For product type single
 
     //If purchase price exc tax is changed
@@ -52,6 +81,10 @@ $(document).ready(function() {
 
         var selling_price_inc_tax = __add_percent(selling_price, tax_rate);
         __write_number($('input#single_dsp_inc_tax'), selling_price_inc_tax);
+       
+        if(typeof locations !== 'undefined'){
+            setStockPrice(purchase_exc_tax);
+       }
     });
 
     //If tax rate is changed

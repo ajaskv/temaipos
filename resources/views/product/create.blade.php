@@ -341,6 +341,13 @@
 
     </div>
     @endcomponent
+    
+    
+    @can('product.opening_stock')
+        <section class="content">
+        @include('opening_stock.form-part-add-product')	
+        </section>
+    @endcan
     <div class="row">
         <div class="col-sm-12">
             <input type="hidden" name="submit_type" id="submit_type">
@@ -350,9 +357,9 @@
                     <button type="submit" value="submit_n_add_selling_prices" class="btn btn-warning btn-big submit_product_form">@lang('lang_v1.save_n_add_selling_price_group_prices')</button>
                     @endif
 
-                    @can('product.opening_stock')
+                    {{-- @can('product.opening_stock')
                     <button id="opening_stock_button" @if(!empty($duplicate_product) && $duplicate_product->enable_stock == 0) disabled @endif type="submit" value="submit_n_add_opening_stock" class="btn bg-purple btn-big submit_product_form">@lang('lang_v1.save_n_add_opening_stock')</button>
-                    @endcan
+                    @endcan --}}
 
                     <button type="submit" value="save_n_add_another" class="btn bg-maroon btn-big submit_product_form">@lang('lang_v1.save_n_add_another')</button>
 
@@ -371,6 +378,7 @@
 
 @section('javascript')
 @php $asset_v = env('APP_VERSION'); @endphp
+
 <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
 
 <script type="text/javascript">

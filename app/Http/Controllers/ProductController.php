@@ -16,6 +16,7 @@ use App\TaxRate;
 use App\Unit;
 use App\Utils\ModuleUtil;
 use App\Utils\ProductUtil;
+use App\Utils\OpenStockUtil;
 use App\Variation;
 use App\VariationGroupPrice;
 use App\VariationLocationDetails;
@@ -418,9 +419,12 @@ class ProductController extends Controller
 
         //product screen view from module
         $pos_module_data = $this->moduleUtil->getModuleData('get_product_screen_top_view');
-
+        $business_id = request()->session()->get('user.business_id');
+        // dd(request()->session());
+        $locations = BusinessLocation::select('location_id','name','id')->where('business_id',$business_id)->get();
+        // dd($locations);
         return view('product.create')
-            ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts', 'product_types', 'common_settings', 'warranties', 'pos_module_data'));
+            ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts', 'product_types', 'common_settings', 'warranties', 'pos_module_data','locations'));
     }
 
     private function product_types()
@@ -440,6 +444,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        //  dd($request);
         if (! auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -549,6 +554,32 @@ class ProductController extends Controller
             }
 
             Media::uploadMedia($product->business_id, $product, $request, 'product_brochure', true);
+            $key = 'quantity_remaining-';
+            $business_id = request()->session()->get('user.business_id');
+            $locations = BusinessLocation::select('location_id','name','id')->where('business_id',$business_id)->get();
+            $variation = Variation::where('product_id',$product->id)->first(); 
+        // dd($product);
+            if(!empty($variation)){
+                $stock = [];
+                foreach($locations as $location){
+                    if(!empty($request->input($key.$location->id) && $request->input($key.$location->id)>0)){
+                        $qty_remaining  = $request->input($key.$location->id);
+                         $stock_info = [];
+                         $product_ar = [];
+                         $stock_info['quantity'] =$qty_remaining;
+                         $stock_info['purchase_price'] = $request->input('single_dpp');
+                         $stock_info['transaction_date'] = null;
+                         $stock_info['purchase_line_note'] = null;
+                         $product_ar[$variation->product->id][0] =$stock_info; 
+                         $stock[$location->id] = $product_ar ;
+                    }
+                
+                }
+                $openStock = new OpenStockUtil($this->productUtil);
+                 $openStock->addOpenStock($stock,$variation->product->id,$request);
+                // dd($stock);
+            }
+
 
             DB::commit();
             $output = ['success' => 1,
@@ -580,7 +611,7 @@ class ProductController extends Controller
 
         return redirect('products')->with('status', $output);
     }
-
+    
     /**
      * Display the specified resource.
      *
