@@ -48,8 +48,8 @@
                 <input type="radio" name="contact_type_radio" id="inlineRadio2" value="business">
                 @lang('business.business')
             </label>
-        </div>
-        <div class="col-md-4">
+        </div> 
+        <div class="col-md-4 common" style="display: none">
           <div class="form-group">
               {!! Form::label('contact_id', __('lang_v1.contact_id') . ':') !!}
               <div class="input-group">
@@ -89,30 +89,30 @@
           </div>
         </div>
         <div class="clearfix"></div>
-        <div class="col-md-3 individual">
+        {{-- <div class="col-md-3 individual">
                 <div class="form-group">
                     {!! Form::label('prefix', __( 'business.prefix' ) . ':') !!}
                     {!! Form::text('prefix', $contact->prefix, ['class' => 'form-control', 'placeholder' => __( 'business.prefix_placeholder' ) ]); !!}
                 </div>
-            </div>
+            </div> --}}
             <div class="col-md-3 individual">
                 <div class="form-group">
                     {!! Form::label('first_name', __( 'business.first_name' ) . ':*') !!}
                     {!! Form::text('first_name', $contact->first_name, ['class' => 'form-control', 'required', 'placeholder' => __( 'business.first_name' ) ]); !!}
                 </div>
             </div>
-            <div class="col-md-3 individual">
+            {{-- <div class="col-md-3 individual">
                 <div class="form-group">
                     {!! Form::label('middle_name', __( 'lang_v1.middle_name' ) . ':') !!}
                     {!! Form::text('middle_name', $contact->middle_name, ['class' => 'form-control', 'placeholder' => __( 'lang_v1.middle_name' ) ]); !!}
                 </div>
-            </div>
-            <div class="col-md-3 individual">
+            </div> --}}
+            {{-- <div class="col-md-3 individual">
                 <div class="form-group">
                     {!! Form::label('last_name', __( 'business.last_name' ) . ':') !!}
                     {!! Form::text('last_name', $contact->last_name, ['class' => 'form-control', 'placeholder' => __( 'business.last_name' ) ]); !!}
                 </div>
-            </div>
+            </div> --}}
             <div class="clearfix"></div>
 
       <div class="col-md-3">
@@ -126,7 +126,7 @@
             </div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 common" style="display: none">
         <div class="form-group">
             {!! Form::label('alternate_number', __('contact.alternate_contact_number') . ':') !!}
             <div class="input-group">
@@ -137,7 +137,7 @@
             </div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 common" style="display: none">
         <div class="form-group">
             {!! Form::label('landline', __('contact.landline') . ':') !!}
             <div class="input-group">
@@ -160,7 +160,7 @@
             </div>
         </div>
 
-        <div class="col-sm-4">
+        {{-- <div class="col-sm-4">
             <div class="form-group individual">
                 {!! Form::label('dob', __('lang_v1.dob') . ':') !!}
                 <div class="input-group">
@@ -171,7 +171,7 @@
                     {!! Form::text('dob', !empty($contact->dob) ? @format_date($contact->dob) : null, ['class' => 'form-control dob-date-picker','placeholder' => __('lang_v1.dob'), 'readonly']); !!}
                 </div>
             </div>
-        </div>
+        </div> --}}
         
         <!-- lead additional field -->
         <div class="col-md-4 lead_additional_div">
@@ -210,7 +210,7 @@
 
         @if(config('constants.enable_contact_assign') && $contact->type !== 'lead')
           <!-- User in create customer & supplier -->
-          <div class="col-md-6">
+          <div class="col-md-6 common" style="display: none">
                 <div class="form-group">
                     {!! Form::label('assigned_to_users', __('lang_v1.assigned_to') . ':' ) !!}
                     <div class="input-group">

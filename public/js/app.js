@@ -523,8 +523,10 @@ $(document).ready(function() {
             if (this.value == 'individual') {
                 $('div.individual').show();
                 $('div.business').hide();
+                $('div.common').hide();
             } else if (this.value == 'business') {
                 $('div.individual').hide();
+                $('div.common').show();
                 $('div.business').show();
             }
         });
